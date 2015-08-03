@@ -16,7 +16,10 @@ module Control.Command
 ) where
 
 
+-- | A type class describing a basic command.
 class Command a where
+    -- | Execute a command.
     execute :: a -> [String] -> IO ()
+    -- | Execute the help of a command.
     help    :: a -> [String] -> IO ()
 
