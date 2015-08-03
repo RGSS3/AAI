@@ -12,7 +12,8 @@ maintainer:             aka.bash0r@gmail.com
 copyright:              (c) 2015 Nils 'bash0r' Jonsson
 category:               Control
 build-type:             Simple
--- extra-source-files:  
+extra-source-files:     README.md
+                  ,     LICENSE
 cabal-version:          >=1.10
 
 source-repository head
