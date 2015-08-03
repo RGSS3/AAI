@@ -21,5 +21,5 @@ class Command a where
     -- | Execute a command.
     execute :: a -> [String] -> IO ()
     -- | Execute the help of a command.
-    help    :: a -> [String] -> IO ()
+    help    :: a -> String
 
