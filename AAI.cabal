@@ -1,5 +1,5 @@
 name:                   AAI
-version:                0.2.0.0
+version:                0.2.0.1
 synopsis:               Abstract Application Interface.
 description:            The Abstract Application Interface is used to define a
                         generic interface for handling command line parameter
@@ -24,7 +24,7 @@ source-repository head
 source-repository this
   type:                 git
   location:             https://github.com/aka-bash0r/AAI
-  tag:                  v0.2.0.0
+  tag:                  v0.2.0.1
 
 library
   exposed-modules:      Control.Command
