@@ -9,7 +9,7 @@ license:                MIT
 license-file:           LICENSE
 author:                 Nils 'bash0r' Jonsson
 maintainer:             aka.bash0r@gmail.com
--- copyright:           
+copyright:              (c) 2015 Nils 'bash0r' Jonsson
 category:               Control
 build-type:             Simple
 -- extra-source-files:  
