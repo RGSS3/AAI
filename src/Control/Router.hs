@@ -27,6 +27,8 @@ class (Command a) => Router a where
 
 -- | Route a specific instruction to a command.
 route :: (Command a, Router a, Alternative m, Monad m) => [a] -> String -> m a
+route []     _   =
+    empty
 route (x:xs) cmd =
     if routes x cmd
        then return x
