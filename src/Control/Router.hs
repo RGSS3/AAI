@@ -15,8 +15,9 @@ module Control.Router
 ( Router (..)
 ) where
 
+import Control.Command
 
-class Router a where
-    routes :: String -> Maybe a
-    route  :: [String] -> a
+
+class (Command a) => Router a where
+    routes :: a -> String -> Bool
 
