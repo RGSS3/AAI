@@ -1,5 +1,5 @@
 name:                   AAI
-version:                0.1.0.0
+version:                0.2.0.0
 synopsis:               Abstract Application Interface.
 description:            The Abstract Application Interface is used to define a
                         generic interface for handling command line parameter
@@ -14,6 +14,7 @@ category:               Control
 build-type:             Simple
 extra-source-files:     README.md
                   ,     LICENSE
+                  ,     changelog.md
 cabal-version:          >=1.10
 
 source-repository head
@@ -23,7 +24,7 @@ source-repository head
 source-repository this
   type:                 git
   location:             https://github.com/aka-bash0r/AAI
-  tag:                  v0.1.0.0
+  tag:                  v0.2.0.0
 
 library
   exposed-modules:      Control.Command
@@ -31,3 +32,4 @@ library
   build-depends:        base >=4.8 && <4.9
   hs-source-dirs:       src
   default-language:     Haskell2010
+
