@@ -12,8 +12,7 @@ Portability :  non-portable (Portability is untested.)
 A simple type class implementing a simple routing table for commands.
 -}
 module Control.Router
-( routes
-, route
+( Router (..)
 ) where
 
 

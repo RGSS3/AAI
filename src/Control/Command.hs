@@ -12,8 +12,7 @@ Portability :  non-portable (Portability is untested.)
 A command interface.
 -}
 module Control.Command
-( execute
-, help
+( Command (..)
 ) where
 
 
