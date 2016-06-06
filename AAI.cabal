@@ -29,7 +29,7 @@ source-repository this
 
 library
     exposed-modules:
-        Data.Defaultable
+        Data.CanDefault
 
         System.Console.CmdArgs.AAI
     build-depends:

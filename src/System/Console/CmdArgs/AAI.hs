@@ -10,7 +10,7 @@ module System.Console.CmdArgs.AAI
 import           Control.Applicative
 import           Control.Monad       (join)
 
-import           Data.Defaultable
+import           Data.CanDefault
 import           Data.Foldable       (asum)
 
 
@@ -26,7 +26,7 @@ newtype AAI a = AAI
   }
 
 
-section :: (Defaultable d) => String -> [AAI d] -> AAI d
+section :: (CanDefault d) => String -> [AAI d] -> AAI d
 section n ds = AAI $ \as -> case as of
   a:as' ->
     if   a == n
