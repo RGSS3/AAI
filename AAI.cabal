@@ -29,6 +29,8 @@ source-repository this
 
 library
     exposed-modules:
+        Data.Defaultable
+
         System.Console.CmdArgs.AAI
     build-depends:
         base ==4.8.*
