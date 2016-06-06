@@ -4,9 +4,12 @@ module System.Console.CmdArgs.AAI
     ( Desc
     , AAI (..)
 
-    , section
+    , aai
+
+    , branch
     , param
     , flag
+    , section
     ) where
 
 import           Control.Applicative
@@ -14,8 +17,11 @@ import           Control.Monad                          (join)
 
 import           Data.CanDefault
 import           Data.Foldable                          (asum)
+import           Data.List                              (nubBy)
 
 import           System.Console.CmdArgs.AAI.CanMarshall
+import           System.Environment                     (getArgs)
+import           System.IO
 
 
 type Desc = Int -> String
@@ -30,14 +36,49 @@ newtype AAI a = AAI
   }
 
 
-section :: (CanDefault d) => String -> [AAI d] -> AAI d
-section n ds = AAI $ \as -> case as of
-  a:as' ->
-    if   a == n
-    then map (\(x,i,d,pi,rs) -> (x,i,d,a:pi,rs)) (asum $ map (`runAAI` as') ds)
-    else map (\(x,i,d,pi,rs) -> (x,i+5,d,a:pi,rs)) (asum $
-           map (`runAAI` as) ds ++ map (`runAAI` as') ds)
-  _ -> [(def,10,const "",[n],[])]
+noValidMatch :: [String] -> [(IO (),Int,Desc,[String],[String])] -> IO ()
+noValidMatch args rs = do
+  putStrLn $ ">> " ++ unwords args ++ " <<"
+  putStrLn "Did you mean one of these?"
+  let for i rs = case rs of
+        (_,_,d,pi,_):rs -> do
+          putStrLn $ "[" ++ show i ++ "] " ++ unwords pi
+          for (i + 1) rs
+        _ -> putStrLn ""
+  for 0 $ take 10 $ nubBy (\(_,_,_,l,_) (_,_,_,r,_) -> l == r) rs
+
+
+ambiguousMatch :: [String] -> [(IO (),Int,Desc,[String],[String])] -> IO ()
+ambiguousMatch args rs = do
+  putStrLn $ ">> " ++ unwords args ++ " <<"
+  putStrLn "is ambiguos; it could mean the fhe following:"
+  let for rs = case rs of
+        (_,_,d,_,_):rs -> putStrLn (d 0)
+        _              -> putStrLn ""
+  for rs
+
+aai :: AAI (IO ()) -> [String] -> IO ()
+aai a args = case args of
+  "verbose":args ->
+    let rs = runAAI a args
+        ps = filter (\(_,i,_,_,_) -> i == 0) rs
+     in case ps of
+       [(a,_,_,_,_)] -> a
+       []            -> noValidMatch args rs
+       ps            -> ambiguousMatch args ps
+  args -> do
+    putStrLn $ ">> " ++ unwords args ++ " <<"
+    let rs = runAAI a args
+        ps = filter (\(_,i,_,_,_) -> i == 0) rs
+     in case ps of
+      [(a,_,_,_,_)] -> a
+      []            -> putStrLn "couldn't be resolved."
+      _             -> putStrLn "is ambiguous."
+    putStrLn ""
+
+
+branch :: [AAI d] -> AAI d
+branch ds = AAI $ \as -> asum $ map (`runAAI` as) ds
 
 param :: (Show a,CanDefault a,CanMarshall a) => AAI a
 param = AAI $ \as -> case as of
@@ -50,9 +91,12 @@ flag :: String -> AAI ()
 flag f = AAI $ \as -> case as of
   a:as' ->
     if   a == f
-    then [((),0,const "",[a],as')]
-    else [((),5,const "",[a],as')]
+    then [((),0,const "",[f],as')]
+    else [((),5,const "",[f],as'),((),10,const "",[f],as)]
   _ -> [((),10,const "",[f],[])]
+
+section :: String -> [AAI d] -> AAI d
+section n ds = flag n *> branch ds
 
 
 instance Functor AAI where

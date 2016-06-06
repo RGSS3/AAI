@@ -11,6 +11,11 @@ import           Control.Monad       (MonadPlus (mzero))
 class CanDefault d where
   def :: d
 
+instance CanDefault () where
+  def = ()
 
-instance (Alternative d) => CanDefault (d a) where
-  def = empty
+instance CanDefault [a] where
+  def = []
+
+instance CanDefault (IO ()) where
+  def = return ()
