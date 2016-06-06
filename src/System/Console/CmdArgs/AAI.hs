@@ -6,6 +6,7 @@ module System.Console.CmdArgs.AAI
 
     , section
     , param
+    , flag
     ) where
 
 import           Control.Applicative
@@ -44,6 +45,14 @@ param = AAI $ \as -> case as of
     Just a' -> [(a',0,const "",[a],as')]
     _       -> let a = def in [(a,10,const "",[show a],as')]
   _ -> let a = def in [(a,10,const "",[show a],[])]
+
+flag :: String -> AAI ()
+flag f = AAI $ \as -> case as of
+  a:as' ->
+    if   a == f
+    then [((),0,const "",[a],as')]
+    else [((),5,const "",[a],as')]
+  _ -> [((),10,const "",[f],[])]
 
 
 instance Functor AAI where
