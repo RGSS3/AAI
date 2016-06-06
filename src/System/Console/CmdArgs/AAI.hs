@@ -5,13 +5,16 @@ module System.Console.CmdArgs.AAI
     , AAI (..)
 
     , section
+    , param
     ) where
 
 import           Control.Applicative
-import           Control.Monad       (join)
+import           Control.Monad                          (join)
 
 import           Data.CanDefault
-import           Data.Foldable       (asum)
+import           Data.Foldable                          (asum)
+
+import           System.Console.CmdArgs.AAI.CanMarshall
 
 
 type Desc = Int -> String
@@ -34,6 +37,13 @@ section n ds = AAI $ \as -> case as of
     else map (\(x,i,d,pi,rs) -> (x,i+5,d,a:pi,rs)) (asum $
            map (`runAAI` as) ds ++ map (`runAAI` as') ds)
   _ -> [(def,10,const "",[n],[])]
+
+param :: (Show a,CanDefault a,CanMarshall a) => AAI a
+param = AAI $ \as -> case as of
+  a:as' -> case marshall a of
+    Just a' -> [(a',0,const "",[a],as')]
+    _       -> let a = def in [(a,10,const "",[show a],as')]
+  _ -> let a = def in [(a,10,const "",[show a],[])]
 
 
 instance Functor AAI where
